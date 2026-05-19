@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ComicPro Translation Studio - Inglés a Español</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Bangers&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="logo">
+        <i class="fa-solid fa-wand-magic-sparkles logo-icon"></i>
+        <h1>ComicPro <span class="accent-text">Studio</span></h1>
+        <span class="badge">v1.0 Beta</span>
+      </div>
+      <div class="header-status">
+        <span id="api-status-badge" class="status-indicator status-off">
+          <i class="fa-solid fa-circle"></i> API Key no configurada
+        </span>
+      </div>
+    </header>
+
+    <!-- Main Workspace Area -->
+    <main class="app-content">
+      
+      <!-- Left Panel: Sidebar Controls -->
+      <aside class="sidebar">
+        
+        <!-- Section 1: Gemini API Config -->
+        <section class="sidebar-card">
+          <h2 class="section-title"><i class="fa-solid fa-key"></i> Configuración de API</h2>
+          <div class="form-group">
+            <label for="api-key-input">Gemini API Key</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" id="api-key-input" placeholder="AIzaSy..." autocomplete="off">
+              <button type="button" id="toggle-api-key-btn" title="Mostrar/Ocultar API Key">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+            <p class="help-text">Se guarda localmente en tu navegador. Puedes obtener una gratis en Google AI Studio.</p>
+          </div>
+          <div class="form-group">
+            <label for="model-select">Modelo de IA</label>
+            <select id="model-select">
+              <option value="gemini-2.0-flash" selected>Gemini 2.0 Flash (Veloz y Preciso)</option>
+              <option value="gemini-1.5-flash">Gemini 1.5 Flash (Recomendado)</option>
+              <option value="gemini-1.5-pro">Gemini 1.5 Pro (Máxima Calidad)</option>
+            </select>
+          </div>
+        </section>
+
+        <!-- Section 2: Load Image -->
+        <section class="sidebar-card">
+          <h2 class="section-title"><i class="fa-solid fa-file-image"></i> Cargar Página</h2>
+          <div class="form-group">
+            <label for="image-url-input">URL de la Imagen (Inglés)</label>
+            <input type="url" id="image-url-input" placeholder="https://ejemplo.com/manga.jpg" 
+                   value="https://cdn.readdetectiveconan.com/file/mangap/9750/10001000/019cf132-0da5-7289-8d00-313691a3d668/3.jpeg">
+          </div>
+          <div class="divider"><span>O BIEN</span></div>
+          <div class="form-group">
+            <div id="drop-zone" class="drop-zone">
+              <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
+              <p>Arrastra tu JPG/PNG aquí o <span>haz clic para subir</span></p>
+              <input type="file" id="file-input" accept="image/*" style="display: none;">
+            </div>
+            <p id="file-name" class="file-name-display"></p>
+          </div>
+          <button id="translate-btn" class="btn btn-primary btn-block">
+            <i class="fa-solid fa-language"></i> Traducir Automáticamente
+          </button>
+        </section>
+
+        <!-- Section 3: Typography & Text Settings -->
+        <section class="sidebar-card" id="bubble-settings-card">
+          <h2 class="section-title"><i class="fa-solid fa-font"></i> Estilo de los Globos</h2>
+          
+          <div class="settings-grid">
+            <div class="form-group">
+              <label for="font-family-select">Fuente</label>
+              <select id="font-family-select">
+                <option value="'Comic Neue', cursive" selected>Comic Neue (Limpia)</option>
+                <option value="'Architects Daughter', cursive">Architects Daughter (Mano)</option>
+                <option value="'Bangers', cursive">Bangers (Llamativa)</option>
+                <option value="system-ui, sans-serif">Estándar Sans-Serif</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="font-size-input">Tamaño (px)</label>
+              <input type="number" id="font-size-input" value="14" min="8" max="72">
+            </div>
+
+            <div class="form-group">
+              <label for="font-color-input">Color Texto</label>
+              <div class="color-picker-wrapper">
+                <input type="color" id="font-color-input" value="#000000">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="bg-color-input">Color Fondo</label>
+              <div class="color-picker-wrapper">
+                <input type="color" id="bg-color-input" value="#ffffff">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="bg-opacity-input">Opacidad Fondo</label>
+              <input type="range" id="bg-opacity-input" min="0" max="100" value="95">
+            </div>
+
+            <div class="form-group">
+              <label for="text-case-select">Formato</label>
+              <select id="text-case-select">
+                <option value="uppercase" selected>MAYÚSCULAS</option>
+                <option value="none">Normal</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="settings-toggles">
+            <button class="toggle-btn" id="toggle-bold" title="Negrita"><i class="fa-solid fa-bold"></i></button>
+            <button class="toggle-btn" id="toggle-italic" title="Cursiva"><i class="fa-solid fa-italic"></i></button>
+            <button class="toggle-btn active" id="align-left" data-align="left" title="Alinear Izquierda"><i class="fa-solid fa-align-left"></i></button>
+            <button class="toggle-btn" id="align-center" data-align="center" title="Centrar"><i class="fa-solid fa-align-center"></i></button>
+            <button class="toggle-btn" id="align-right" data-align="right" title="Alinear Derecha"><i class="fa-solid fa-align-right"></i></button>
+          </div>
+          
+          <div class="form-group border-setting">
+            <label for="border-width-input">Borde de Globo</label>
+            <div class="flex-row">
+              <input type="number" id="border-width-input" value="2" min="0" max="10" style="width: 60px;">
+              <input type="color" id="border-color-input" value="#000000" class="color-picker-small">
+            </div>
+          </div>
+
+          <button id="apply-selected-btn" class="btn btn-secondary btn-block btn-sm" disabled>
+            <i class="fa-solid fa-circle-check"></i> Aplicar al Globo Seleccionado
+          </button>
+        </section>
+
+        <!-- Section 4: Output / PDF compilation -->
+        <section class="sidebar-card">
+          <h2 class="section-title"><i class="fa-solid fa-file-pdf"></i> Exportar</h2>
+          <div class="action-buttons">
+            <button id="add-bubble-btn" class="btn btn-secondary" disabled>
+              <i class="fa-solid fa-plus"></i> Añadir Globo
+            </button>
+            <button id="clear-workspace-btn" class="btn btn-danger-outline" title="Limpiar espacio de trabajo">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+          <button id="export-pdf-btn" class="btn btn-success btn-block mt-2" disabled>
+            <i class="fa-solid fa-file-arrow-down"></i> Descargar PDF Traducido
+          </button>
+        <!-- Section 5: JDownloader Integration -->
+        <section class="sidebar-card">
+          <h2 class="section-title"><i class="fa-solid fa-download"></i> JDownloader</h2>
+          <div class="form-group">
+            <label for="jd-port-input">Puerto Click'n'Load</label>
+            <input type="number" id="jd-port-input" value="9666" min="1024" max="65535" style="width: 100%;">
+          </div>
+
+          <!-- Batch download: paste N URLs -->
+          <div class="form-group">
+            <label for="jd-batch-input">URLs en lote <span style="opacity:0.6;font-size:11px;">(una por línea)</span></label>
+            <textarea id="jd-batch-input" rows="5" placeholder="https://cdn.site.com/manga/cap1/001.jpg&#10;https://cdn.site.com/manga/cap1/002.jpg&#10;..." style="width:100%;resize:vertical;background:rgba(255,255,255,0.07);color:inherit;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:8px;font-size:12px;font-family:monospace;"></textarea>
+          </div>
+          <button id="jd-batch-btn" class="btn btn-primary btn-block">
+            <i class="fa-solid fa-list-check"></i> Enviar Lote a JDownloader
+          </button>
+          <div id="jd-batch-status" style="margin-top:8px;font-size:12px;display:none;"></div>
+
+          <hr style="border-color:rgba(255,255,255,0.1);margin:14px 0;">
+
+          <!-- Single URL: current loaded image -->
+          <button id="send-to-jd-btn" class="btn btn-secondary btn-block" disabled>
+            <i class="fa-solid fa-paper-plane"></i> Enviar Imagen Actual
+          </button>
+          <p class="help-text">Envía la imagen actual o un lote de URLs directamente a tu cliente JDownloader local (Click'n'Load debe estar activo).</p>
+        </section>
+
+      </aside>
+
+      <!-- Right Panel: Interactive Canvas Workspace -->
+      <section class="workspace-area">
+        
+        <!-- Mode Toggles / Toolbar -->
+        <div class="workspace-toolbar">
+          <div class="toolbar-info">
+            <span id="image-dimensions"><i class="fa-solid fa-expand"></i> Sin imagen cargada</span>
+            <span id="bubble-count" class="ml-3"><i class="fa-solid fa-comment-dots"></i> 0 Globos</span>
+          </div>
+          <div class="toolbar-actions">
+            <button id="zoom-out-btn" class="btn-icon" title="Alejar"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+            <button id="zoom-in-btn" class="btn-icon" title="Acercar"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+            <button id="zoom-reset-btn" class="btn-icon" title="100%"><i class="fa-solid fa-arrows-to-eye"></i></button>
+          </div>
+        </div>
+
+        <!-- The Canvas / Editor Wrapper -->
+        <div class="canvas-viewport" id="canvas-viewport">
+          
+          <!-- Welcome Placeholder -->
+          <div class="welcome-placeholder" id="welcome-placeholder">
+            <div class="placeholder-icon">
+              <i class="fa-solid fa-language"></i>
+            </div>
+            <h2>Estudio de Traducción ComicPro</h2>
+            <p>Comienza pegando la URL de una página de cómic en inglés o subiendo una imagen desde tu computadora.</p>
+            <div class="placeholder-sample">
+              <p class="sample-title">¿Quieres probar una de muestra?</p>
+              <button id="load-sample-btn" class="btn btn-secondary btn-sm">
+                Cargar página de Detective Conan
+              </button>
+            </div>
+          </div>
+
+          <!-- Loading Spinner Overlay -->
+          <div class="loading-overlay" id="loading-overlay">
+            <div class="spinner-container">
+              <div class="spinner"></div>
+              <p class="loading-text">Analizando con Gemini AI...</p>
+              <p class="loading-subtext">Leyendo textos en inglés, calculando coordenadas y traduciendo al español.</p>
+            </div>
+          </div>
+
+          <!-- Interactive Workspace Container (This contains the image + absolutely positioned text boxes) -->
+          <div class="workspace-container" id="workspace-container" style="display: none;">
+            <img id="manga-image" class="manga-image" src="" alt="Manga original">
+            <div id="bubbles-overlay" class="bubbles-overlay"></div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- CDN Libraries -->
+  <!-- html2canvas allows us to capture the DOM (image + translated texts) as a canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- jsPDF allows us to write that canvas into a high-quality PDF page -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
+  <!-- Core Client App JS -->
+  <script src="app.js"></script>
+</body>
+</html>

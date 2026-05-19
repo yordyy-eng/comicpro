@@ -1,0 +1,32 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Environment — NEVER commit real keys
+.env
+!.env.example
+
+# JDownloader source (SVN checkout, heavy)
+jdownloader-source/
+
+# Java build artifacts
+java-app/build/
+java-app/.gradle/
+java-app/out/
+*.class
+*.jar
+
+# jpackage output
+java-app/dist/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.suo
+*.user
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
