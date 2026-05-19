@@ -1,77 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.Insets?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="cl.comicpro.ui.MainController"
-            prefWidth="720" prefHeight="560"
+            prefWidth="900" prefHeight="660"
             style="-fx-background-color: #1a1a2e;">
 
     <top>
-        <VBox style="-fx-background-color: #16213e; -fx-padding: 16;">
+        <VBox style="-fx-background-color: #0f3460; -fx-padding: 12 20 12 20;">
             <Label text="ComicPro Translation Studio"
                    style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #e94560;"/>
-            <Label text="JDownloader → Traducción → PDF"
-                   style="-fx-font-size: 12; -fx-text-fill: #888;"/>
+            <Label text="Descarga · Traduce · Exporta PDF — standalone"
+                   style="-fx-font-size: 11; -fx-text-fill: #aaa;"/>
         </VBox>
     </top>
 
     <center>
-        <VBox spacing="14" style="-fx-padding: 20;">
+        <HBox spacing="14" style="-fx-padding: 14;">
 
-            <!-- API Settings -->
-            <TitledPane text="Configuración Gemini API" collapsible="false"
-                        style="-fx-text-fill: white; -fx-base: #0f3460;">
-                <GridPane hgap="10" vgap="8">
-                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+            <!-- LEFT: Config + Preview -->
+            <VBox spacing="10" prefWidth="360" minWidth="300">
+
+                <!-- API + Model -->
+                <GridPane hgap="8" vgap="6">
                     <Label text="API Key:" style="-fx-text-fill: #ccc;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
                     <TextField fx:id="apiKeyField" promptText="AIzaSy..."
-                               style="-fx-background-color: #1a1a2e; -fx-text-fill: white; -fx-border-color: #444;"
+                               style="-fx-background-color: #0f3460; -fx-text-fill: white; -fx-border-color: #333;"
                                GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS"/>
                     <Label text="Modelo:" style="-fx-text-fill: #ccc;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                    <ComboBox fx:id="modelCombo"
-                              style="-fx-background-color: #1a1a2e; -fx-text-fill: white;"
-                              GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <ComboBox fx:id="modelCombo" style="-fx-background-color: #0f3460; -fx-text-fill: white;"
+                              GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity"/>
                     <columnConstraints>
-                        <ColumnConstraints minWidth="80"/>
+                        <ColumnConstraints minWidth="60"/>
                         <ColumnConstraints hgrow="ALWAYS"/>
                     </columnConstraints>
                 </GridPane>
-            </TitledPane>
 
-            <!-- Folder Selector -->
-            <TitledPane text="Carpeta de JDownloader" collapsible="false"
-                        style="-fx-text-fill: white; -fx-base: #0f3460;">
-                <VBox spacing="8">
-                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                    <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Button text="Seleccionar Carpeta" onAction="#onSelectFolder"
-                                style="-fx-background-color: #e94560; -fx-text-fill: white; -fx-font-weight: bold;"/>
-                        <Label fx:id="folderLabel" text="Ninguna carpeta seleccionada"
-                               style="-fx-text-fill: #888; -fx-font-size: 11;"/>
-                    </HBox>
-                    <ListView fx:id="pageList" prefHeight="140"
-                              style="-fx-background-color: #1a1a2e; -fx-text-fill: white; -fx-border-color: #333;"/>
+                <!-- URL Input -->
+                <VBox spacing="4">
+                    <Label text="URL capítulo  (o pega URLs, una por línea)"
+                           style="-fx-text-fill: #aaa; -fx-font-size: 11;"/>
+                    <TextArea fx:id="urlInput" prefRowCount="3" wrapText="true"
+                              promptText="https://reader.site.com/manga/cap1"
+                              style="-fx-background-color: #0f3460; -fx-text-fill: white;
+                                     -fx-border-color: #333; -fx-font-family: monospace; -fx-font-size: 11;"/>
                 </VBox>
-            </TitledPane>
 
-            <!-- Actions -->
-            <HBox spacing="12" alignment="CENTER">
-                <Button fx:id="translateBtn" text="Traducir Todo y Exportar PDF"
-                        onAction="#onTranslate" disable="true"
-                        prefWidth="260" prefHeight="40"
-                        style="-fx-background-color: #4ecca3; -fx-text-fill: #1a1a2e; -fx-font-weight: bold; -fx-font-size: 14;"/>
-            </HBox>
+                <!-- Test mode -->
+                <CheckBox fx:id="testModeCheck" text="Modo Prueba (solo 3 páginas)"
+                          style="-fx-text-fill: #f0a500; -fx-font-size: 11;" selected="true"/>
 
-            <!-- Progress -->
-            <VBox spacing="6">
-                <ProgressBar fx:id="progressBar" progress="0" maxWidth="Infinity"/>
-                <Label fx:id="statusLabel" text="Selecciona una carpeta para comenzar."
-                       style="-fx-text-fill: #888; -fx-font-size: 11;"/>
+                <!-- Run button -->
+                <Button fx:id="runBtn" text="⬇  Descargar · Traducir · Exportar PDF"
+                        onAction="#onRun" maxWidth="Infinity" prefHeight="40"
+                        style="-fx-background-color: #e94560; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-font-size: 13;"/>
+
+                <!-- Phase label + counters -->
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label fx:id="phaseLabel" text="Listo"
+                           style="-fx-text-fill: #4ecca3; -fx-font-weight: bold; -fx-font-size: 12;"/>
+                    <Label fx:id="counterLabel" text=""
+                           style="-fx-text-fill: #888; -fx-font-size: 12;"/>
+                </HBox>
+
+                <!-- Download progress -->
+                <VBox spacing="2">
+                    <Label text="Descarga" style="-fx-text-fill: #666; -fx-font-size: 10;"/>
+                    <ProgressBar fx:id="downloadBar" progress="0" maxWidth="Infinity" prefHeight="6"
+                                 style="-fx-accent: #4ecca3;"/>
+                </VBox>
+
+                <!-- Translate progress -->
+                <VBox spacing="2">
+                    <Label text="Traducción Gemini" style="-fx-text-fill: #666; -fx-font-size: 10;"/>
+                    <ProgressBar fx:id="translateBar" progress="0" maxWidth="Infinity" prefHeight="6"
+                                 style="-fx-accent: #e94560;"/>
+                </VBox>
+
+                <!-- Current page preview -->
+                <VBox spacing="4" VBox.vgrow="ALWAYS">
+                    <Label fx:id="previewLabel" text="Vista previa"
+                           style="-fx-text-fill: #555; -fx-font-size: 10;"/>
+                    <ImageView fx:id="pagePreview" fitWidth="340" fitHeight="240"
+                               preserveRatio="true" smooth="true"
+                               style="-fx-background-color: #0a0a1a;"/>
+                </VBox>
+
             </VBox>
 
-        </VBox>
+            <!-- RIGHT: Log -->
+            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                <Label text="Log en tiempo real" style="-fx-text-fill: #555; -fx-font-size: 10;"/>
+                <TextArea fx:id="logArea" editable="false" wrapText="true"
+                          VBox.vgrow="ALWAYS"
+                          style="-fx-background-color: #0a0a1a; -fx-text-fill: #4ecca3;
+                                 -fx-font-family: monospace; -fx-font-size: 11; -fx-border-color: #222;"/>
+            </VBox>
+
+        </HBox>
     </center>
 
 </BorderPane>

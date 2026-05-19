@@ -1,8 +1,8 @@
-rootProject.name = "comicpro"
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
     }
 }
+
+rootProject.name = 'comicpro'

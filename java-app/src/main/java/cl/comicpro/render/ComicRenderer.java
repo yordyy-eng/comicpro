@@ -50,7 +50,7 @@ public class ComicRenderer {
 
     private Font fitFont(Graphics2D g, String text, int maxW, int maxH) {
         for (int size = 18; size >= 8; size -= 2) {
-            Font f = new Font("Arial Bold", Font.BOLD, size);
+            Font f = new Font("Arial", Font.BOLD, size);
             FontMetrics fm = g.getFontMetrics(f);
             List<String> lines = wrapText(text, fm, maxW);
             int totalH = lines.size() * (fm.getHeight() + 2);
